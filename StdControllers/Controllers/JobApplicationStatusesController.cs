@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StdControllers.Data;
@@ -36,20 +37,21 @@ public class JobApplicationStatusesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<JobApplicationStatuses>> CreateJobApplication(JobApplicationStatuses newJobAppStatus)
+    public async Task<ActionResult<JobApplicationStatuses>> CreateJobApplication(JobApplicationStatusesRequestDto newJobAppStatusRequest)
     {
-        if (newJobAppStatus is null)
+        if (newJobAppStatusRequest is null)
             return BadRequest();
 
+        var newJobAppStatus = newJobAppStatusRequest.Adapt<JobApplicationStatuses>();
         _context.JobApplicationStatuses.Add(newJobAppStatus);
 
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetJobApplicationById), new { id = newJobAppStatus.Id }, newJobAppStatus);
+        return CreatedAtAction(nameof(GetJobApplicationById), new { id = newJobAppStatus.Id }, newJobAppStatusRequest);
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateJobApplication(int id, JobApplicationStatuses updatedJobAppStatus)
+    public async Task<ActionResult> UpdateJobApplication(int id, JobApplicationStatusesRequestDto updatedJobAppStatus)
     {
         var jobAppStatusToUpdate = await _context.JobApplicationStatuses.FindAsync(id);
 
