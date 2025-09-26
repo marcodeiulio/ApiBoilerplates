@@ -24,6 +24,7 @@ public class JobApplicationsController : ControllerBase
     {
         var jobApps = await _context.JobApplications
                     .Include(j => j.Status)
+                    .AsNoTracking()
                     .ToListAsync();
 
         var jobAppsDto = new List<JobApplicationDto>();
@@ -41,6 +42,7 @@ public class JobApplicationsController : ControllerBase
         var jobApps = await _context.JobApplications
                     .Include(j => j.Company)
                     .Include(j => j.Status)
+                    .AsNoTracking()
                     .ToListAsync();
 
         var jobAppsDto = new List<JobApplicationWithCompanyDto>();
@@ -60,6 +62,7 @@ public class JobApplicationsController : ControllerBase
     {
         var jobApplication = await _context.JobApplications
         .Include(j => j.Status)
+        .AsNoTracking()
         .FirstOrDefaultAsync(j => j.Id == id);
 
         if (jobApplication is null)
@@ -74,6 +77,7 @@ public class JobApplicationsController : ControllerBase
         var jobApplication = await _context.JobApplications
         .Include(j => j.Company)
         .Include(j => j.Status)
+        .AsNoTracking()
         .FirstOrDefaultAsync(j => j.Id == id);
 
         if (jobApplication is null)

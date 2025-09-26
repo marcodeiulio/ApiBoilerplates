@@ -22,6 +22,7 @@ public class CompaniesController : ControllerBase
     {
         var companies = await _context.Companies
             .Include(c => c.JobApplications)
+            .AsNoTracking()
             .ToListAsync();
 
         var companiesDto = new List<CompanyDto>();
@@ -39,6 +40,7 @@ public class CompaniesController : ControllerBase
     {
         var companies = await _context.Companies
             .Include(c => c.JobApplications)
+            .AsNoTracking()
             .ToListAsync();
 
         var companiesDto = new List<CompanyWithJobApplicationDto>();
@@ -65,6 +67,7 @@ public class CompaniesController : ControllerBase
     {
         var company = await _context.Companies
             .Include(c => c.JobApplications)
+            .AsNoTracking()
             .FirstOrDefaultAsync(c => c.Id == id);
 
         if (company is null)
@@ -78,6 +81,7 @@ public class CompaniesController : ControllerBase
     {
         var company = await _context.Companies
             .Include(c => c.JobApplications)
+            .AsNoTracking()
             .FirstOrDefaultAsync(c => c.Id == id);
 
         if (company is null)

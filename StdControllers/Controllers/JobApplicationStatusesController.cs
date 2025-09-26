@@ -22,13 +22,13 @@ public class JobApplicationStatusesController : ControllerBase
     [HttpGet(Name = "GetJobApplicationStatuses")]
     public async Task<ActionResult<List<JobApplicationStatuses>>> GetJobApplicationStatuses()
     {
-        return Ok(await _context.JobApplicationStatuses.ToListAsync());
+        return Ok(await _context.JobApplicationStatuses.AsNoTracking().ToListAsync());
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<JobApplicationStatuses?>> GetJobApplicationById(int id)
     {
-        var jobAppStatus = await _context.JobApplicationStatuses.FirstOrDefaultAsync(j => j.Id == id);
+        var jobAppStatus = await _context.JobApplicationStatuses.AsNoTracking().FirstOrDefaultAsync(j => j.Id == id);
 
         if (jobAppStatus is null)
             return NotFound();
