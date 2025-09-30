@@ -48,7 +48,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<string>> Login(UserDto req)
+    public async Task<ActionResult<TokenResponseDto>> Login(UserDto req)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == req.Username);
 
@@ -63,8 +63,9 @@ public class AuthController : ControllerBase
             return BadRequest("Invalid credentials.");
         }
 
-        var token = CreateToken(user);
-        return Ok(token);
+        var tokenDto = await CreateTokenResponseDto(user);
+
+        return Ok(tokenDto);
     }
 
     private string CreateToken(User user)
@@ -84,10 +85,52 @@ public class AuthController : ControllerBase
             issuer: _conf["Auth:Issuer"],
             audience: _conf["Auth:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(5),
+            expires: DateTime.UtcNow.AddSeconds(30),
             signingCredentials: credentials
         );
 
         return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
+    }
+
+    [HttpPost("refresh-token")]
+    public async Task<ActionResult<TokenResponseDto>> RefreshTokens(TokenRequestDto request)
+    {
+        var user = await _context.Users.FindAsync(request.UserId);
+
+        if (user is null
+        || user.RefreshToken != request.RefreshToken
+        || user.RefreshTokenExpiryDate < DateTime.UtcNow)
+        {
+            return Unauthorized("Invalid token.");
+        }
+
+        var result = await CreateTokenResponseDto(user);
+
+        return Ok(result);
+    }
+
+    private async Task<TokenResponseDto> CreateTokenResponseDto(User user)
+    {
+        return new TokenResponseDto
+        {
+            AccessToken = CreateToken(user),
+            RefreshToken = await CreateAndStoreRefreshToken(user)
+        };
+    }
+
+    private async Task<string> CreateAndStoreRefreshToken(User user)
+    {
+        user.RefreshToken = CreateRefreshToken();
+        user.RefreshTokenExpiryDate = DateTime.UtcNow.AddMinutes(5);
+        await _context.SaveChangesAsync();
+        return user.RefreshToken;
+    }
+
+    private string CreateRefreshToken()
+    {
+        var randomNumber = new byte[32];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
     }
 }
