@@ -1,7 +1,6 @@
 using StdControllers.Data;
 using Microsoft.EntityFrameworkCore;
 using StdControllers.Models;
-using TrackoApi.Models;
 
 namespace StdControllers.Data;
 

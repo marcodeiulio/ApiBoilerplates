@@ -1,4 +1,4 @@
-namespace TrackoApi.Models;
+namespace StdControllers.Models;
 
 public class JobApplicationStatuses
 {
