@@ -1,12 +1,13 @@
 using StdControllers.Data;
 using Microsoft.EntityFrameworkCore;
 using StdControllers.Models;
-using TrackoApi.Models;
 
 namespace StdControllers.Data;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
+    public DbSet<User> Users => Set<User>();
+    public DbSet<Roles> Roles => Set<Roles>();
     public DbSet<Company> Companies => Set<Company>();
     public DbSet<JobApplication> JobApplications => Set<JobApplication>();
     public DbSet<JobApplicationStatuses> JobApplicationStatuses => Set<JobApplicationStatuses>();

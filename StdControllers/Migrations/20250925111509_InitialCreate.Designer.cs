@@ -116,7 +116,7 @@ namespace StdControllers.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TrackoApi.Models.JobApplicationStatuses", b =>
+            modelBuilder.Entity("StdControllers.Models.JobApplicationStatuses", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -179,7 +179,7 @@ namespace StdControllers.Migrations
                         .WithMany("JobApplications")
                         .HasForeignKey("CompanyId");
 
-                    b.HasOne("TrackoApi.Models.JobApplicationStatuses", "Status")
+                    b.HasOne("StdControllers.Models.JobApplicationStatuses", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId");
 
