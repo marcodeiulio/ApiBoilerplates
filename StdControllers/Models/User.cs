@@ -7,6 +7,7 @@ public class User
     public string PasswordHash { get; set; } = string.Empty;
     public string? RefreshToken { get; set; }
     public DateTime? RefreshTokenExpiryDate { get; set; }
+    public List<Roles> Roles { get; set; } = [];
 }
 
 public class UserDto
