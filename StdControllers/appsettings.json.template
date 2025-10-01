@@ -1,0 +1,11 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=[Path/To/Db.db]"
+  },
+  "Auth": {
+    "Issuer": "[AuthServer]",
+    "Audience": "[AuthClient]",
+    "Key": "[32BytesLongSecretKeyHere]"
+  },
+  "AllowedHosts": "[allowedHosts.settings]"
+}
